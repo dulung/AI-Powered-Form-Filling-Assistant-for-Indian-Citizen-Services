@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0f1724;
+}
+
+/* Small helpers */
+body {
+  @apply bg-gray-900 text-white;
+}
+
+* { box-sizing: border-box; }

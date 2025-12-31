@@ -1,0 +1,8 @@
+{
+  "Child Name": ["Name"],
+  "Father's Name": ["Father Name"],
+  "Mother's Name": ["Mother Name"],
+  "Date of Birth": ["DOB"],
+  "Place of Birth": ["Birth Place", "Place of Birth"],
+  "Gender": ["Gender"]
+}

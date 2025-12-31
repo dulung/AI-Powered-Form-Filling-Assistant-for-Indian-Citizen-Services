@@ -1,0 +1,9 @@
+{
+  "Account Holder Name": ["Name"],
+  "Father's Name": ["Father Name"],
+  "Date of Birth": ["DOB"],
+  "PAN Number": ["PAN"],
+  "Aadhaar Number": ["Aadhaar"],
+  "Mobile Number": ["Mobile", "Phone"],
+  "Address": ["Address", "Residence"]
+}

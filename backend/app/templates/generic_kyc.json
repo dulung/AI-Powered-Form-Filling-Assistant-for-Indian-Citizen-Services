@@ -1,0 +1,8 @@
+{
+  "Full Name": ["Name", "Applicant Name"],
+  "Father's Name": ["Father Name", "Guardian Name"],
+  "Date of Birth": ["DOB", "Date of Birth"],
+  "PAN Number": ["PAN"],
+  "Aadhaar Number": ["Aadhaar"],
+  "Gender": ["Gender"]
+}
