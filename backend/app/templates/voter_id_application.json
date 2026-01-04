@@ -1,0 +1,24 @@
+{
+  "form_name": "Voter Identity Card Application Form",
+
+  "mapping": {
+    "Applicant Name": ["Name"],
+    "Relation Name": ["Father Name", "Relation Name"],
+    "Relation Type": ["Relation Type"],
+    "Date of Birth": ["DOB"],
+    "Gender": ["Gender"],
+    "Address": ["Address"]
+  },
+
+  "layout": {
+    "Applicant Name": { "x": 25, "y": 55 },
+
+    "Relation Name": { "x": 25, "y": 70 },
+    "Relation Type": { "x": 120, "y": 70 },
+
+    "Date of Birth": { "x": 25, "y": 85 },
+    "Gender": { "x": 120, "y": 85 },
+
+    "Address": { "x": 25, "y": 110 }
+  }
+}

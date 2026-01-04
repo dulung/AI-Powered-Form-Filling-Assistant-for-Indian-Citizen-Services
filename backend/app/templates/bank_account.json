@@ -1,9 +1,25 @@
 {
-  "Account Holder Name": ["Name"],
-  "Father's Name": ["Father Name"],
-  "Date of Birth": ["DOB"],
-  "PAN Number": ["PAN"],
-  "Aadhaar Number": ["Aadhaar"],
-  "Mobile Number": ["Mobile", "Phone"],
-  "Address": ["Address", "Residence"]
+  "form_name": "Bank Account Opening Form (Individual)",
+
+  "mapping": {
+    "Account Holder Name": ["Name"],
+    "Father's Name": ["Father Name"],
+    "Date of Birth": ["DOB"],
+    "PAN Number": ["PAN"],
+    "Aadhaar Number": ["Aadhaar"],
+    "Mobile Number": ["Mobile", "Phone"],
+    "Address": ["Address"]
+  },
+
+  "layout": {
+    "Account Holder Name": { "x": 25, "y": 55 },
+    "Father's Name": { "x": 25, "y": 70 },
+
+    "Date of Birth": { "x": 25, "y": 85 },
+    "PAN Number": { "x": 25, "y": 100 },
+    "Aadhaar Number": { "x": 25, "y": 115 },
+
+    "Mobile Number": { "x": 25, "y": 140 },
+    "Address": { "x": 25, "y": 155 }
+  }
 }

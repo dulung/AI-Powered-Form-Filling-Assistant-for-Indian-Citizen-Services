@@ -1,8 +1,21 @@
 {
-  "Full Name": ["Name", "Applicant Name"],
-  "Father's Name": ["Father Name", "Guardian Name"],
-  "Date of Birth": ["DOB", "Date of Birth"],
-  "PAN Number": ["PAN"],
-  "Aadhaar Number": ["Aadhaar"],
-  "Gender": ["Gender"]
+  "form_name": "Know Your Customer (KYC) Form",
+
+  "mapping": {
+    "Applicant Name": ["Name"],
+    "Father Name": ["Father Name"],
+    "Date of Birth": ["DOB"],
+    "Aadhaar Number": ["Aadhaar"],
+    "Address": ["Address"]
+  },
+
+  "layout": {
+    "Applicant Name": { "x": 25, "y": 55 },
+    "Father Name": { "x": 25, "y": 70 },
+
+    "Date of Birth": { "x": 25, "y": 85 },
+    "Aadhaar Number": { "x": 25, "y": 100 },
+
+    "Address": { "x": 25, "y": 125 }
+  }
 }

@@ -1,8 +1,23 @@
 {
-  "Child Name": ["Name"],
-  "Father's Name": ["Father Name"],
-  "Mother's Name": ["Mother Name"],
-  "Date of Birth": ["DOB"],
-  "Place of Birth": ["Birth Place", "Place of Birth"],
-  "Gender": ["Gender"]
+  "form_name": "Birth Certificate Registration Form",
+
+  "mapping": {
+    "Child Name": ["Name"],
+    "Gender": ["Gender"],
+    "Date of Birth": ["DOB"],
+    "Place of Birth": ["Birth Place", "Place of Birth"],
+    "Father's Name": ["Father Name"],
+    "Mother's Name": ["Mother Name"]
+  },
+
+  "layout": {
+    "Child Name": { "x": 25, "y": 55 },
+    "Gender": { "x": 120, "y": 55 },
+
+    "Date of Birth": { "x": 25, "y": 70 },
+    "Place of Birth": { "x": 25, "y": 85 },
+
+    "Father's Name": { "x": 25, "y": 110 },
+    "Mother's Name": { "x": 25, "y": 125 }
+  }
 }

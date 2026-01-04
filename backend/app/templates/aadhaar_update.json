@@ -1,0 +1,20 @@
+{
+  "form_name": "Aadhaar Update / Correction Form",
+
+  "mapping": {
+    "Full Name": ["Name"],
+    "Date of Birth": ["DOB"],
+    "Gender": ["Gender"],
+    "Aadhaar Number": ["Aadhaar"],
+    "Address": ["Address"]
+  },
+
+  "layout": {
+    "Full Name": { "x": 25, "y": 55 },
+    "Date of Birth": { "x": 25, "y": 70 },
+    "Gender": { "x": 120, "y": 70 },
+
+    "Aadhaar Number": { "x": 25, "y": 95 },
+    "Address": { "x": 25, "y": 115 }
+  }
+}
