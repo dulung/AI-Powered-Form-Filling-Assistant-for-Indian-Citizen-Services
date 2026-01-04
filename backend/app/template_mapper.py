@@ -37,7 +37,9 @@ def map_fields_to_template(template_name: str, extracted_fields: dict):
     # Try reading the template file
     try:
         with open(template_path, "r", encoding="utf-8") as f:
-            mapping = json.load(f)
+            template = json.load(f)
+            mapping = template.get("mapping", {})
+
     except Exception as e:
         logger.exception(f"❌ Failed to load template JSON: {e}")
         return {"error": f"Error loading template file: {str(e)}"}

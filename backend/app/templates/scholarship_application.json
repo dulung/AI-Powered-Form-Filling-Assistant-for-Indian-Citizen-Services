@@ -1,0 +1,23 @@
+{
+  "form_name": "Government Scholarship Application Form",
+
+  "mapping": {
+    "Student Name": ["Name"],
+    "Father's Name": ["Father Name"],
+    "Date of Birth": ["DOB"],
+    "Aadhaar Number": ["Aadhaar"],
+    "Institution Name": ["College", "Institution"],
+    "Address": ["Address"]
+  },
+
+  "layout": {
+    "Student Name": { "x": 25, "y": 55 },
+    "Father's Name": { "x": 25, "y": 70 },
+
+    "Date of Birth": { "x": 25, "y": 85 },
+    "Aadhaar Number": { "x": 25, "y": 100 },
+
+    "Institution Name": { "x": 25, "y": 120 },
+    "Address": { "x": 25, "y": 140 }
+  }
+}

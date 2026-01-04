@@ -2,14 +2,31 @@ import React, { useState } from "react";
 import UploadForm from "../UploadForm";
 import ResultCard from "../components/ResultCard";
 
-// CARD FIELD DEFINITIONS - These must match backend keys exactly!
+// CARD FIELD DEFINITIONS - Must match backend keys exactly
 const aadhaarPanFields = [
-  "Name", "Father Name", "Mother Name", "DOB", "Gender", "PAN", "Aadhaar", "Address"
+  "Name",
+  "Father Name",
+  "Mother Name",
+  "DOB",
+  "Gender",
+  "PAN",
+  "Aadhaar",
+  "Address",
 ];
+
 const voterFields = [
-  "Name", "EPIC Number", "DOB", "Gender", "Relation Name", "Relation Type", "Address"
+  "Name",
+  "EPIC Number",
+  "DOB",
+  "Gender",
+  "Relation Name",
+  "Relation Type",
+  "Address",
 ];
-const combinedFields = Array.from(new Set([...aadhaarPanFields, ...voterFields]));
+
+const combinedFields = Array.from(
+  new Set([...aadhaarPanFields, ...voterFields])
+);
 
 function emptyFields(keys) {
   return Object.fromEntries(keys.map((k) => [k, ""]));
@@ -28,27 +45,50 @@ export default function Extract() {
   const [cardType, setCardType] = useState(null);
   const [status, setStatus] = useState("idle");
 
+  // ✅ NEW: selected government form template
+  const [template, setTemplate] = useState("birth_certificate");
+
+  // ✅ TEMPLATE-AWARE DOWNLOAD FLOW
   async function handleDownloadPdf() {
     try {
-      const resp = await fetch("http://127.0.0.1:8000/generate-pdf", {
+      // 1️⃣ Map extracted fields to selected template
+      const mapResp = await fetch("http://127.0.0.1:8000/map", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          template: "default",
+          template,
           fields: result,
         }),
       });
-      if (!resp.ok) throw new Error("Failed to generate PDF");
-      const blob = await resp.blob();
+
+      if (!mapResp.ok) throw new Error("Field mapping failed");
+      const mapData = await mapResp.json();
+
+      // 2️⃣ Generate template-based PDF
+      const pdfResp = await fetch(
+        "http://127.0.0.1:8000/generate-form-pdf",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            template,
+            fields: mapData.mapped_fields,
+          }),
+        }
+      );
+
+      if (!pdfResp.ok) throw new Error("PDF generation failed");
+
+      const blob = await pdfResp.blob();
       const url = window.URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
-      a.download = "filled_form.pdf";
+      a.download = `${template}_filled.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      alert("PDF downloaded successfully!");
     } catch (err) {
       alert("PDF download failed: " + (err.message || err));
     }
@@ -60,10 +100,11 @@ export default function Extract() {
     setResult(blank);
   }
 
-  const showStatus = (status !== "idle" && status !== "error");
+  const showStatus = status !== "idle" && status !== "error";
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
+      {/* Voice-only manual mode */}
       <button
         className="bg-indigo-600 text-white rounded px-4 py-2 font-bold mb-4"
         onClick={() => {
@@ -74,8 +115,17 @@ export default function Extract() {
       >
         Fill Manually via Voice
       </button>
-      <div className={`transition-all duration-500 grid gap-8 ${showStatus ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}>
-        <div className={`transition-all duration-500 ${showStatus ? "lg:col-span-2" : "lg:col-span-3"}`}>
+
+      <div
+        className={`transition-all duration-500 grid gap-8 ${
+          showStatus ? "lg:grid-cols-3" : "lg:grid-cols-1"
+        }`}
+      >
+        <div
+          className={`transition-all duration-500 ${
+            showStatus ? "lg:col-span-2" : "lg:col-span-3"
+          }`}
+        >
           <UploadForm
             onStart={() => {
               setStatus("uploading");
@@ -83,13 +133,10 @@ export default function Extract() {
             }}
             onOCRStart={() => setStatus("ocr")}
             onResult={(payload) => {
-              console.log('Extracted fields:', payload.fields);
-              console.log('Card type:', payload.card_type);
               const cardKeys = fieldKeysForCard(payload.card_type || "");
-              // Use values if they exist; otherwise, blank
-              const values = Object.fromEntries(cardKeys.map(
-                k => [k, payload.fields?.[k] ?? ""]
-              ));
+              const values = Object.fromEntries(
+                cardKeys.map((k) => [k, payload.fields?.[k] ?? ""])
+              );
               setResult(values);
               setCardType(payload.card_type || null);
               setStatus(cardKeys.length ? "done" : "error");
@@ -100,62 +147,40 @@ export default function Extract() {
             }}
           />
         </div>
+
         {showStatus && (
-          <aside className="transition-all duration-500 flex flex-col justify-start">
-            <div className="bg-gradient-to-br from-gray-900/95 via-gray-800/90 to-gray-900/80 rounded-3xl shadow-2xl border border-slate-700/60 px-8 py-10 w-full h-full flex flex-col items-center gap-6">
-              <div className="flex items-center gap-3 mb-2">
-                {status === "done" && (
-                  <svg className="w-8 h-8 text-green-400 drop-shadow-lg" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" className="stroke-current opacity-20" />
-                    <path strokeLinecap="round" strokeLinejoin="round" className="stroke-current" d="M6 13l4 4 6-8" />
-                  </svg>
-                )}
-                {status === "ocr" && (
-                  <svg className="w-8 h-8 text-indigo-300 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                  </svg>
-                )}
-                <h3 className="text-2xl font-bold tracking-tight text-indigo-200 drop-shadow">
-                  {status === "uploading" && "Uploading..."}
-                  {status === "ocr" && "Recognizing Text..."}
-                  {status === "done" && "Ready!"}
-                  {status === "idle" && "Status"}
-                  {status === "error" && "Error"}
-                </h3>
-              </div>
-              <div className="mt-2 w-full flex flex-col gap-2">
-                {status === "uploading" && (
-                  <span className="text-base text-indigo-200/80">Your file is being uploaded. Please wait.</span>
-                )}
-                {status === "ocr" && (
-                  <span className="text-base text-indigo-200/80">Extracting all data from your document.</span>
-                )}
-                {status === "done" && (
-                  <div className="flex items-center gap-2 text-green-300 font-semibold text-lg">
-                    Extraction complete <span className="animate-bounce">✅</span>
-                  </div>
-                )}
-                {status === "error" && (
-                  <span className="text-base text-red-400">There was a problem. Please try again.</span>
-                )}
-                {status === "idle" && (
-                  <span className="text-base text-slate-400">Waiting for upload…</span>
-                )}
-              </div>
+          <aside className="flex flex-col justify-start">
+            <div className="bg-gray-900 rounded-3xl shadow-2xl border border-slate-700 px-8 py-10 w-full h-full flex flex-col gap-6">
+              <h3 className="text-xl font-bold text-indigo-300">
+                Select Government Form
+              </h3>
+
+              {/* ✅ TEMPLATE SELECTOR */}
+              <select
+                value={template}
+                onChange={(e) => setTemplate(e.target.value)}
+                className="bg-gray-800 text-white p-3 rounded-lg border border-gray-700"
+              >
+                <option value="birth_certificate">Birth Certificate</option>
+<option value="bank_account">Bank Account</option>
+<option value="pan_form">PAN Application</option>
+<option value="generic_kyc">Generic KYC</option>
+<option value="voter_id_application">Voter ID Application</option>
+<option value="aadhaar_update">Aadhaar Update</option>
+<option value="scholarship_application">Scholarship Application</option>
+              </select>
+
               {cardType && (
-                <div className="mt-5 self-center bg-indigo-700/20 px-4 py-2 rounded-full shadow text-indigo-200 text-base font-semibold tracking-wide">
-                  <span className="text-indigo-100 font-light">Detected: </span>
-                  <span className="uppercase tracking-wider font-extrabold">{cardType}</span>
+                <div className="mt-4 text-indigo-200">
+                  Detected Document:{" "}
+                  <span className="font-bold uppercase">{cardType}</span>
                 </div>
               )}
-              <div className="mt-8 opacity-60 text-xs tracking-wide text-slate-400">
-                Powered by <span className="text-indigo-400 font-semibold">FormFill AI</span>
-              </div>
             </div>
           </aside>
         )}
       </div>
+
       {result && (
         <div className="mt-10">
           <ResultCard
